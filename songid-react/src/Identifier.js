@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Buffer } from 'buffer/';
 import secret from '../../secret';
-import http from 'http';
+import axios from 'axios';
 import crypto from 'crypto';
 import qs from 'querystring';
 import styled from 'styled-components';
@@ -37,22 +37,10 @@ function recognize(host, access_key, secret_key, query_data, query_type) {
 		var http_uri = "/v1/identify"
 		var data_type = query_type
 		var signature_version = "1"
-		var current_data = new Date();
-		var minutes = current_data.getTimezoneOffset();
-		var timestamp = parseInt(current_data.getTime() / 1000) + minutes * 60 + '';
+		var current_date = new Date();
+		var minutes = current_date.getTimezoneOffset();
+		var timestamp = parseInt(current_date.getTime() / 1000) + minutes * 60 + '';
 		var sample_bytes = query_data.length + '';
-
-		var options = {
-			hostname: host,
-			port: 80,
-			path: http_uri,
-			method: http_method,
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-			},
-			// "is not a valid url" without this added.
-			protocol: 'http:'
-		};
 
 		var string_to_sign = http_method + "\n" + http_uri + "\n" + access_key + "\n" + data_type + "\n" + signature_version + "\n" + timestamp;
 		var sign = create_sign(string_to_sign, secret_key);
@@ -68,20 +56,15 @@ function recognize(host, access_key, secret_key, query_data, query_type) {
 
 		var content = qs.stringify(post_data);
 
-		var req = http.request(options, function(res) {
-			res.setEncoding('utf8');
-			res.on('data', function(chunk) {
-				resolve(chunk);
-			});
+		var req = axios.post("https://" + host + http_uri, content).then((res) => {
+			console.log('statusCode:', res.status);
+			console.log('headers:', res.headers);	
+			
+			resolve(res.data);
+		}).catch((err) => {
+			console.log('SONG IDENTIFIER: problem with request: ' + err);
+			reject(err);
 		});
-
-		req.on('error', function(e) {
-			console.log('SONG IDENTIFIER: problem with request: ' + e.message);
-			reject(e);
-		});
-
-		req.write(content);
-		req.end();
 	});
 }
 
@@ -134,7 +117,7 @@ export default ({ blob, children }) => {
 					secrets.secret || your_access_secret,
 					Buffer.from(arrayBuffer),
 					data_type
-				).then(r => JSON.parse(r));
+				);
 
 				if (!response.metadata) {
 					if (response.status && response.status.code === 3003) {
