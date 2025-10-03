@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Buffer } from 'buffer/';
-import secret from '../../secret';
+import secret from '../secret';
 import axios from 'axios';
 import crypto from 'crypto';
 import qs from 'querystring';
@@ -25,7 +25,7 @@ async function getArrayBuffer(blob) {
 	}
 }
 
-const gettingStoredSecrets = browser.storage.sync.get();
+const gettingStoredSecrets = chrome.storage.sync.get();
 
 function create_sign(data, secret_key) {
 	return crypto.createHmac('sha1', secret_key).update(data).digest().toString('base64');

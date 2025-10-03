@@ -58,7 +58,7 @@ export default ({ rec, goAgain }) => {
 					<GoAgainButton
 						type="button"
 						onClick={async () => {
-							const settings = await browser.storage.sync.get();
+							const settings = await chrome.storage.sync.get();
 							const t = settings.len || 8;
 							setTime(t);
 							const pp = goAgain(t);
