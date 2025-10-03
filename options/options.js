@@ -1,9 +1,11 @@
+const ext = (typeof browser !== 'undefined') ? browser : (typeof chrome !== 'undefined' ? chrome : {});
+
 function save(e) {
 	// uhh whatever
 	let v = len.value
 	v = v > 15 ? 15 : v
 	// local vs sync probs no big deal in performance - hoping it is cached somewhere.
-	browser.storage.sync.set({
+	ext.storage && ext.storage.sync && ext.storage.sync.set && ext.storage.sync.set({
 		len: v,
 		host: host.value,
 		key: key.value,
@@ -13,7 +15,7 @@ function save(e) {
 
 
 function restore() {
-	browser.storage.sync.get()
+	(ext.storage && ext.storage.sync && ext.storage.sync.get ? ext.storage.sync.get() : Promise.resolve({}))
 	.then(values => {
 		len.value = values.len || ''
 		host.value = values.host || ''

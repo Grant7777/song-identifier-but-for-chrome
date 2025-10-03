@@ -5,6 +5,7 @@ import axios from 'axios';
 import crypto from 'crypto';
 import qs from 'querystring';
 import styled from 'styled-components';
+import ext from './webext';
 
 async function getArrayBuffer(blob) {
 	if ('function' === typeof blob.arrayBuffer) {
@@ -25,7 +26,7 @@ async function getArrayBuffer(blob) {
 	}
 }
 
-const gettingStoredSecrets = browser.storage.sync.get();
+const gettingStoredSecrets = (ext.storage && ext.storage.sync && ext.storage.sync.get) ? ext.storage.sync.get() : Promise.resolve({});
 
 function create_sign(data, secret_key) {
 	return crypto.createHmac('sha1', secret_key).update(data).digest().toString('base64');
