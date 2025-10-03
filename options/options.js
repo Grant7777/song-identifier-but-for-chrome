@@ -3,7 +3,7 @@ function save(e) {
 	let v = len.value
 	v = v > 15 ? 15 : v
 	// local vs sync probs no big deal in performance - hoping it is cached somewhere.
-	browser.storage.sync.set({
+	chrome.storage.sync.set({
 		len: v,
 		host: host.value,
 		key: key.value,
@@ -13,7 +13,7 @@ function save(e) {
 
 
 function restore() {
-	browser.storage.sync.get()
+	chrome.storage.sync.get()
 	.then(values => {
 		len.value = values.len || ''
 		host.value = values.host || ''
