@@ -3,6 +3,7 @@ import usePromise from 'react-promise';
 import Countdown from 'react-countdown';
 import styled from 'styled-components';
 import Identifier from './Identifier';
+import ext from './webext';
 
 const BlueLink = styled.a`
 	color: lightblue;
@@ -58,7 +59,7 @@ export default ({ rec, goAgain }) => {
 					<GoAgainButton
 						type="button"
 						onClick={async () => {
-							const settings = await browser.storage.sync.get();
+                            const settings = ext.storage && ext.storage.sync && ext.storage.sync.get ? await ext.storage.sync.get() : {};
 							const t = settings.len || 8;
 							setTime(t);
 							const pp = goAgain(t);

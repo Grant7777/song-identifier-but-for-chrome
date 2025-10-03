@@ -7,9 +7,9 @@
   "description": "Music recognition. Like shazam or soundhound.",
   "homepage_url": "https://github.com/losnappas/Song-identifier",
   "icons": {
-    "16": "icons/icon.svg",
-    "48": "icons/icon.svg",
-    "96": "icons/icon.svg"
+    "16": "icons/icon.png",
+    "48": "icons/icon.png",
+    "96": "icons/icon.png"
   },
 
   "applications": {
@@ -19,19 +19,19 @@
   },
 
   "background": {
-	  "scripts": ["/background/inject.js"]
+	  "scripts": ["background/inject.js"]
   },
 
 
   "browser_action": {
 	  "browser_style": true,
 	  "default_title": "Identify",
-	  "default_icon": "icons/icon.svg"
+	  "default_icon": "icons/icon.png"
   },
 
   "permissions": [
     "activeTab",
-    "*://*.acrcloud.com/v1/identify",
+    "https://*.acrcloud.com/*",
     "storage"
   ],
   "options_ui": {
